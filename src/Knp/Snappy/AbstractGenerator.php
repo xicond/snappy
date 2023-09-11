@@ -630,6 +630,10 @@ abstract class AbstractGenerator implements GeneratorInterface, LoggerAwareInter
         }
 
         $scheme = isset($parsedFilename['scheme']) ? \mb_strtolower($parsedFilename['scheme']) : '';
+        if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN' && preg_match('/^[a-zA-Z]:\\\\$/', substr($filename, 0, 3))) {
+            // it's a Windows file path with drive letter
+            $scheme = 'file';
+        }
         if ($scheme !== '' && $scheme !== 'file') {
             throw new InvalidArgumentException(\sprintf('The output file scheme is not supported. Expected \'\' or \'file\' but got \'%s\'.', $scheme));
         }
